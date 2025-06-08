@@ -1,25 +1,11 @@
 import os
-from flask import Flask
-from threading import Thread
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-
 from utils import normalize_query, search_links
+from keep_alive import keep_alive
 
-# Get token from Replit secret
-TOKEN = os.getenv("BOT_TOKEN")
+TOKEN = os.getenv("TOKEN")
 
-# Flask web server to keep Replit alive
-app_server = Flask('')
-
-@app_server.route('/')
-def home():
-    return "I'm alive"
-
-def keep_alive():
-    Thread(target=lambda: app_server.run(host='0.0.0.0', port=8080)).start()
-
-# Telegram command handlers
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Welcome! Use /find <name>, [nationality], [occupation]")
 
@@ -47,7 +33,7 @@ async def find(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Found social media profiles:", reply_markup=reply_markup)
 
 def main():
-    keep_alive()  # Start web server
+    keep_alive()  # Start uptime server
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("find", find))
