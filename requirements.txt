@@ -1,6 +1,6 @@
 python-telegram-bot
 transformers
 duckduckgo-search
-bs4
+beautifulsoup4
 requests
 torch
